@@ -14,7 +14,7 @@ interface AppProviderProps {
 // Zod schema for RelayMetadata validation
 const RelayMetadataSchema = z.object({
   relays: z.array(z.object({
-    url: z.string().url(),
+    url: z.url(),
     read: z.boolean(),
     write: z.boolean(),
   })),
