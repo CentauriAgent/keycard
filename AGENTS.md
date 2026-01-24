@@ -233,7 +233,7 @@ const events = await nostr.query([{
   kinds: [1],
   '#t': ['farming'],
   limit: 20
-}], { signal });
+}]);
 ```
 
 ### Kind Ranges
@@ -304,7 +304,7 @@ const events = await nostr.query([{
   authors: ADMIN_PUBKEYS, // CRITICAL: Only trust admin authors
   '#d': ['pathos-organizers'],
   limit: 1
-}], { signal });
+}]);
 ```
 
 **❌ INSECURE - No author filtering:**
@@ -315,7 +315,7 @@ const events = await nostr.query([{
   kinds: [30078],
   '#d': ['pathos-organizers'],
   limit: 1
-}], { signal });
+}]);
 ```
 
 **Addressable Events Example:**
@@ -327,7 +327,7 @@ const article = await nostr.query([{
   authors: [authorPubkey], // CRITICAL: Verify the author
   '#d': ['my-article-slug'],
   limit: 1
-}], { signal });
+}]);
 ```
 
 **URL Routing for Addressable/Replaceable Events:**
@@ -357,7 +357,7 @@ const communityEvents = await nostr.query([{
   authors: [communityOwnerPubkey], // CRITICAL: Only trust the community owner
   '#d': [communityId],
   limit: 1,
-}], { signal });
+}]);
 
 if (communityEvents.length === 0) return [];
 
@@ -372,7 +372,7 @@ const approvals = await nostr.query([{
   authors: moderatorPubkeys, // CRITICAL: Only accept approvals from moderators
   '#a': [`34550:${communityOwnerPubkey}:${communityId}`],
   limit: 100,
-}], { signal });
+}]);
 ```
 
 Without filtering approvals by the moderator list, anyone could publish kind 4550 events claiming to approve posts for the community.
@@ -413,7 +413,7 @@ function useSpecificRelay() {
   const relay = nostr.relay('wss://relay.damus.io');
 
   // Query from this specific relay only
-  const events = await relay.query([{ kinds: [1], limit: 20 }], { signal });
+  const events = await relay.query([{ kinds: [1], limit: 20 }]);
 
   // Publish to this specific relay only
   await relay.event({ kind: 1, content: 'Hello from specific relay!' });
@@ -438,7 +438,7 @@ function useRelayGroup() {
   ]);
 
   // Query from all relays in the group
-  const events = await relayGroup.query([{ kinds: [1], limit: 20 }], { signal });
+  const events = await relayGroup.query([{ kinds: [1], limit: 20 }]);
 
   // Publish to all relays in the group
   await relayGroup.event({ kind: 1, content: 'Hello from relay group!' });
@@ -488,8 +488,7 @@ function usePosts() {
   return useQuery({
     queryKey: ['posts'],
     queryFn: async (c) => {
-      const signal = AbortSignal.any([c.signal, AbortSignal.timeout(1500)]);
-      const events = await nostr.query([{ kinds: [1], limit: 20 }], { signal });
+      const events = await nostr.query([{ kinds: [1], limit: 20 }]);
       return events; // these events could be transformed into another format
     },
   });
@@ -509,7 +508,7 @@ const events = await nostr.query([
     '#e': [eventId],
     limit: 150,
   }
-], { signal });
+]);
 
 // Separate by type in JavaScript
 const notes = events.filter((e) => e.kind === 1);
@@ -521,9 +520,9 @@ const genericReposts = events.filter((e) => e.kind === 16);
 ```typescript
 // This creates unnecessary load and can trigger rate limiting
 const [notes, reposts, genericReposts] = await Promise.all([
-  nostr.query([{ kinds: [1], '#e': [eventId] }], { signal }),
-  nostr.query([{ kinds: [6], '#e': [eventId] }], { signal }),
-  nostr.query([{ kinds: [16], '#e': [eventId] }], { signal }),
+  nostr.query([{ kinds: [1], '#e': [eventId] }]),
+  nostr.query([{ kinds: [6], '#e': [eventId] }]),
+  nostr.query([{ kinds: [16], '#e': [eventId] }]),
 ]);
 ```
 
@@ -577,8 +576,7 @@ function useCalendarEvents() {
   return useQuery({
     queryKey: ['calendar-events'],
     queryFn: async (c) => {
-      const signal = AbortSignal.any([c.signal, AbortSignal.timeout(1500)]);
-      const events = await nostr.query([{ kinds: [31922, 31923], limit: 20 }], { signal });
+      const events = await nostr.query([{ kinds: [31922, 31923], limit: 20 }]);
 
       // Filter events through validator to ensure they meet NIP-52 requirements
       return events.filter(validateCalendarEvent);
@@ -779,7 +777,6 @@ The base Nostr protocol uses hex string identifiers when filtering by event IDs 
 // ❌ Wrong: naddr is not decoded
 const events = await nostr.query(
   [{ ids: [naddr] }],
-  { signal }
 );
 ```
 
@@ -807,7 +804,6 @@ const events = await nostr.query(
     authors: [naddr.pubkey],
     '#d': [naddr.identifier],
   }],
-  { signal }
 );
 ```
 
