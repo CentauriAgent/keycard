@@ -1,4 +1,9 @@
-### Infinite Scroll for Nostr Feeds
+---
+name: nostr-infinite-scroll
+description: Build feed interfaces, implement pagination for Nostr events, or create social media-style infinite scroll experiences.
+---
+
+# Infinite Scroll for Nostr Feeds
 
 For feed-like interfaces, implement infinite scroll using TanStack Query's `useInfiniteQuery` with Nostr's timestamp-based pagination:
 

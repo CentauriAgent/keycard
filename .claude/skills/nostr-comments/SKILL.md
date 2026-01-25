@@ -1,3 +1,8 @@
+---
+name: nostr-comments
+description: Implement Nostr comment systems, add discussion features to posts/articles, or build community interaction features.
+---
+
 # Adding Nostr Comments Sections
 
 The project includes a complete commenting system using NIP-22 (kind 1111) comments that can be added to any Nostr event or URL. The `CommentsSection` component provides a full-featured commenting interface with threaded replies, user authentication, and real-time updates.

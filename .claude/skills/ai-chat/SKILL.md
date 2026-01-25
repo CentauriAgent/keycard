@@ -1,4 +1,9 @@
-### AI Integration with Shakespeare API
+---
+name: ai-chat
+description: Build AI-powered chat interfaces, implement streaming responses, or integrate with Shakespeare AI.
+---
+
+# AI Integration with Shakespeare API
 
 Use the `useShakespeare` hook for AI chat completions with Nostr authentication. The API dynamically provides available models, so you should query them at runtime rather than hardcoding model names.
 

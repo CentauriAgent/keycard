@@ -1,4 +1,9 @@
-### Direct Messaging on Nostr
+---
+name: nostr-direct-messages
+description: Implement Nostr direct messaging features, build chat interfaces, or work with encrypted peer-to-peer communication (NIP-04 and NIP-17).
+---
+
+# Direct Messaging on Nostr
 
 This project includes a complete direct messaging system supporting both NIP-04 (legacy) and NIP-17 (modern, more private) encrypted messages with real-time subscriptions, optimistic updates, and a persistent cache-first local storage.
 
