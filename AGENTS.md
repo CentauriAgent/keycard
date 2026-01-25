@@ -15,7 +15,6 @@ This project is a Nostr client application built with React 18.x, TailwindCSS 3.
 
 ## Project Structure
 
-- `/docs/`: Specialized documentation for implementation patterns and features
 - `/src/components/`: UI components including NostrProvider for Nostr integration
   - `/src/components/ui/`: shadcn/ui components (48+ components available)
   - `/src/components/auth/`: Authentication-related components (LoginArea, LoginDialog, etc.)
@@ -829,20 +828,6 @@ function EditProfilePage() {
 ```
 
 The `EditProfileForm` component displays just the form. It requires no props, and will "just work" automatically.
-
-### Direct Messaging (NIP-04 & NIP-17)
-
-The project includes a complete direct messaging system with real-time updates, encrypted storage, and support for both NIP-04 (legacy) and NIP-17 (modern private messaging) protocols. **The system is disabled by default** - enable it by passing `enabled: true` in the `DMProvider` config.
-
-For complete implementation guide including:
-- Setup and configuration
-- Sending messages and file attachments
-- Using the `DMMessagingInterface` component
-- Building custom messaging UIs
-- Protocol comparison (NIP-04 vs NIP-17)
-- Advanced features and architecture
-
-See **`docs/NOSTR_DIRECT_MESSAGES.md`**
 
 ### Uploading Files on Nostr
 
