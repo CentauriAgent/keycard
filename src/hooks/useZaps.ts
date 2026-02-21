@@ -47,10 +47,10 @@ export function useZaps(
       // Only refetch if the query is currently being observed (component is mounted)
       return query.getObserversCount() > 0 ? 60000 : false;
     },
-    queryFn: async (c) => {
+    queryFn: async () => {
       if (!actualTarget) return [];
 
-      const signal = AbortSignal.any([c.signal, AbortSignal.timeout(5000)]);
+      const signal = AbortSignal.timeout(5000);
 
       // Query for zap receipts for this specific event
       if (actualTarget.kind >= 30000 && actualTarget.kind < 40000) {

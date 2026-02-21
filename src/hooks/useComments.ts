@@ -7,7 +7,7 @@ export function useComments(root: NostrEvent | URL, limit?: number) {
 
   return useQuery({
     queryKey: ['nostr', 'comments', root instanceof URL ? root.toString() : root.id, limit],
-    queryFn: async (c) => {
+    queryFn: async () => {
       const filter: NostrFilter = { kinds: [1111] };
 
       if (root instanceof URL) {
@@ -26,7 +26,7 @@ export function useComments(root: NostrEvent | URL, limit?: number) {
       }
 
       // Query for all kind 1111 comments that reference this addressable event regardless of depth
-      const signal = AbortSignal.any([c.signal, AbortSignal.timeout(5000)]);
+      const signal = AbortSignal.timeout(5000);
       const events = await nostr.query([filter], { signal });
 
       // Helper function to get tag value

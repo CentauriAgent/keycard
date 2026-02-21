@@ -16,12 +16,12 @@ export function useGlobalFeed() {
 
   return useInfiniteQuery({
     queryKey: ['global-feed'],
-    queryFn: async ({ pageParam, signal }) => {
+    queryFn: async ({ pageParam }) => {
       const filter = { kinds: [1], limit: 20 };
       if (pageParam) filter.until = pageParam;
 
       const events = await nostr.query([filter], {
-        signal: AbortSignal.any([signal, AbortSignal.timeout(1500)])
+        signal: AbortSignal.timeout(1500),
       });
 
       return events;
