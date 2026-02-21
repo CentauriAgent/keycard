@@ -41,7 +41,7 @@ export function useZaps(
   }, []);
 
   const { data: zapEvents, ...query } = useQuery<NostrEvent[], Error>({
-    queryKey: ['zaps', actualTarget?.id],
+    queryKey: ['nostr', 'zaps', actualTarget?.id],
     staleTime: 30000, // 30 seconds
     refetchInterval: (query) => {
       // Only refetch if the query is currently being observed (component is mounted)
@@ -246,7 +246,7 @@ export function useZaps(
                 });
 
                 // Invalidate zap queries to refresh counts
-                queryClient.invalidateQueries({ queryKey: ['zaps'] });
+                queryClient.invalidateQueries({ queryKey: ['nostr', 'zaps'] });
 
                 // Close dialog last to ensure clean state
                 onZapSuccess?.();
@@ -290,7 +290,7 @@ export function useZaps(
                 });
 
                 // Invalidate zap queries to refresh counts
-                queryClient.invalidateQueries({ queryKey: ['zaps'] });
+                queryClient.invalidateQueries({ queryKey: ['nostr', 'zaps'] });
 
                 // Close dialog last to ensure clean state
                 onZapSuccess?.();
