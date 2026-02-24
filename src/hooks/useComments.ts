@@ -2,15 +2,17 @@ import { NKinds, NostrEvent, NostrFilter } from '@nostrify/nostrify';
 import { useNostr } from '@nostrify/react';
 import { useQuery } from '@tanstack/react-query';
 
-export function useComments(root: NostrEvent | URL, limit?: number) {
+export function useComments(root: NostrEvent | URL | `#${string}`, limit?: number) {
   const { nostr } = useNostr();
 
   return useQuery({
-    queryKey: ['nostr', 'comments', root instanceof URL ? root.toString() : root.id, limit],
+    queryKey: ['nostr', 'comments', root instanceof URL ? root.toString() : typeof root === 'string' ? root : root.id, limit],
     queryFn: async () => {
       const filter: NostrFilter = { kinds: [1111] };
 
-      if (root instanceof URL) {
+      if (typeof root === 'string') {
+        filter['#I'] = [root];
+      } else if (root instanceof URL) {
         filter['#I'] = [root.toString()];
       } else if (NKinds.addressable(root.kind)) {
         const d = root.tags.find(([name]) => name === 'd')?.[1] ?? '';
@@ -37,7 +39,9 @@ export function useComments(root: NostrEvent | URL, limit?: number) {
 
       // Filter top-level comments (those with lowercase tag matching the root)
       const topLevelComments = events.filter(comment => {
-        if (root instanceof URL) {
+        if (typeof root === 'string') {
+          return getTagValue(comment, 'i') === root;
+        } else if (root instanceof URL) {
           return getTagValue(comment, 'i') === root.toString();
         } else if (NKinds.addressable(root.kind)) {
           const d = getTagValue(root, 'd') ?? '';
