@@ -219,7 +219,7 @@ createEvent({
 const events = await nostr.query([{
   kinds: [1],
   '#t': ['farming'],
-  limit: 20
+  limit: 15
 }]);
 ```
 
@@ -358,7 +358,7 @@ const approvals = await nostr.query([{
   kinds: [4550],
   authors: moderatorPubkeys, // CRITICAL: Only accept approvals from moderators
   '#a': [`34550:${communityOwnerPubkey}:${communityId}`],
-  limit: 100,
+  limit: 15,
 }]);
 ```
 
@@ -400,7 +400,7 @@ function useSpecificRelay() {
   const relay = nostr.relay('wss://relay.damus.io');
 
   // Query from this specific relay only
-  const events = await relay.query([{ kinds: [1], limit: 20 }]);
+  const events = await relay.query([{ kinds: [1], limit: 15 }]);
 
   // Publish to this specific relay only
   await relay.event({ kind: 1, content: 'Hello from specific relay!' });
@@ -425,7 +425,7 @@ function useRelayGroup() {
   ]);
 
   // Query from all relays in the group
-  const events = await relayGroup.query([{ kinds: [1], limit: 20 }]);
+  const events = await relayGroup.query([{ kinds: [1], limit: 15 }]);
 
   // Publish to all relays in the group
   await relayGroup.event({ kind: 1, content: 'Hello from relay group!' });
@@ -475,7 +475,7 @@ function usePosts() {
   return useQuery({
     queryKey: ['posts'],
     queryFn: async (c) => {
-      const events = await nostr.query([{ kinds: [1], limit: 20 }]);
+      const events = await nostr.query([{ kinds: [1], limit: 15 }]);
       return events; // these events could be transformed into another format
     },
   });
@@ -493,7 +493,7 @@ const events = await nostr.query([
   {
     kinds: [1, 6, 16], // All repost kinds in one query
     '#e': [eventId],
-    limit: 150,
+    limit: 15,
   }
 ]);
 
@@ -563,7 +563,7 @@ function useCalendarEvents() {
   return useQuery({
     queryKey: ['calendar-events'],
     queryFn: async (c) => {
-      const events = await nostr.query([{ kinds: [31922, 31923], limit: 20 }]);
+      const events = await nostr.query([{ kinds: [31922, 31923], limit: 15 }]);
 
       // Filter events through validator to ensure they meet NIP-52 requirements
       return events.filter(validateCalendarEvent);
