@@ -77,23 +77,48 @@ export function QRShareSheet({ data, open, onOpenChange }: QRShareSheetProps) {
     }
   };
 
+  // Build full wallet pass payload from card data
+  const walletPayload = {
+    pubkey: data.pubkey,
+    name: data.displayName || data.name || 'Anonymous',
+    jobTitle: data.config?.title,
+    company: data.config?.company,
+    nip05: data.nip05,
+    lud16: data.lud16,
+    picture: data.picture,
+    relays: DEFAULT_RELAYS,
+  };
+
   const handleAppleWallet = async () => {
     try {
       const res = await fetch('/api/wallet/apple', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pubkey: data.pubkey }),
+        body: JSON.stringify(walletPayload),
       });
       if (!res.ok) throw new Error('Failed to generate pass');
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${safeDisplayName}.pkpass`;
-      a.click();
-      URL.revokeObjectURL(url);
+
+      const contentType = res.headers.get('Content-Type') || '';
+      if (contentType.includes('application/vnd.apple.pkpass')) {
+        // Real PKPass binary — trigger download
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${safeDisplayName}.pkpass`;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast({ title: 'Apple Wallet', description: 'Pass downloaded!' });
+      } else {
+        // Mock mode — show info
+        const json = await res.json();
+        toast({
+          title: 'Apple Wallet (Preview)',
+          description: json.message || 'Pass preview generated — Apple cert needed for real passes.',
+        });
+      }
     } catch {
-      toast({ title: 'Apple Wallet', description: 'Coming soon!' });
+      toast({ title: 'Apple Wallet', description: 'Failed to generate pass. Try again.' });
     }
   };
 
@@ -102,13 +127,22 @@ export function QRShareSheet({ data, open, onOpenChange }: QRShareSheetProps) {
       const res = await fetch('/api/wallet/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pubkey: data.pubkey }),
+        body: JSON.stringify(walletPayload),
       });
       if (!res.ok) throw new Error('Failed to generate pass');
-      const { url } = await res.json();
-      window.open(url, '_blank');
+
+      const json = await res.json();
+      if (json.saveUrl && !json.mock) {
+        window.open(json.saveUrl, '_blank', 'noopener,noreferrer');
+        toast({ title: 'Google Wallet', description: 'Opening Google Pay...' });
+      } else {
+        toast({
+          title: 'Google Wallet (Preview)',
+          description: json.message || 'Pass preview generated — Google service account needed for real passes.',
+        });
+      }
     } catch {
-      toast({ title: 'Google Wallet', description: 'Coming soon!' });
+      toast({ title: 'Google Wallet', description: 'Failed to generate pass. Try again.' });
     }
   };
 
