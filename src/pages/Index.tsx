@@ -10,7 +10,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useEffect, useRef, useState } from 'react';
-import { useState } from 'react';
 import {
   Zap,
   RefreshCw,
@@ -184,7 +183,7 @@ const Index = () => {
             <span>key<span className="text-violet-500">.card</span></span>
           </Link>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white hidden sm:inline-flex" onClick={handleSignInClick}>
+            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white" onClick={handleSignInClick}>
               Sign In
             </Button>
             <Button size="sm" className="bg-violet-500 hover:bg-violet-600 text-white" onClick={handleCreateClick}>
