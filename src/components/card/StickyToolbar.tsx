@@ -49,12 +49,12 @@ export function StickyToolbar({ data, onQrClick }: StickyToolbarProps) {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom duration-300">
       <div className="max-w-[480px] mx-auto">
-        <div className="h-16 bg-white/80 dark:bg-[#0A0A0F]/80 backdrop-blur-xl border-t border-slate-200 dark:border-[#2D2D44] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.4)] flex items-center justify-around px-4 pb-[env(safe-area-inset-bottom)]">
+        <div className="h-16 backdrop-blur-xl border-t flex items-center justify-around px-4 pb-[env(safe-area-inset-bottom)]" style={{ backgroundColor: 'rgba(10,10,15,0.92)', borderColor: '#2D2D44', boxShadow: '0 -4px 12px rgba(0,0,0,0.5)' }}>
           {buttons.map((btn) => (
             <button
               key={btn.label}
               onClick={btn.onClick}
-              className="flex flex-col items-center gap-1 active:text-violet-500 transition-colors"
+              className="flex flex-col items-center gap-1 text-slate-200 active:text-violet-400 transition-colors"
             >
               <btn.icon className="w-5 h-5" />
               <span className="text-xs font-medium">{btn.label}</span>

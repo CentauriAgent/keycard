@@ -43,7 +43,7 @@ export function CardPage() {
     : undefined;
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-[#0A0A0F]" style={{ backgroundColor: isDark ? '#0A0A0F' : undefined }}>
+    <div className="min-h-screen" style={{ backgroundColor: bgColor }}>
       <div
         className={`mx-auto max-w-[480px] min-h-screen sm:my-8 sm:min-h-0 sm:rounded-2xl sm:shadow-2xl sm:overflow-hidden ${textColorClass} ${glassClasses}`}
         style={{
