@@ -38,6 +38,7 @@ export interface KeyCardConfig {
   address?: Address;
   company?: string;
   title?: string;
+  email?: string;
   links?: LinkEntry[];
   booking?: BookingConfig;
   theme?: ThemeConfig;
@@ -57,6 +58,8 @@ export interface CardData {
   nip05?: string;
   config?: KeyCardConfig;
   identities?: ExternalIdentity[];
+  /** Raw kind:0 event — used for NIP-57 zap requests */
+  profileEvent?: import('nostr-tools').Event;
 }
 
 export interface ExternalIdentity {

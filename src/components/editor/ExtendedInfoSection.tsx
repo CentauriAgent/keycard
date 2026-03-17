@@ -59,6 +59,19 @@ export function ExtendedInfoSection() {
         </div>
       </div>
 
+      {/* Email */}
+      <div>
+        <Label htmlFor="email" className="text-xs text-slate-500">Email Address</Label>
+        <Input
+          id="email"
+          type="email"
+          {...register('email')}
+          placeholder="you@example.com"
+          className="mt-1"
+        />
+        <p className="text-xs text-slate-400 mt-1">Shows an Email button on your card</p>
+      </div>
+
       {/* Privacy Warning */}
       <Alert className="border-amber-500/50 bg-amber-500/10">
         <AlertTriangle className="w-4 h-4 text-amber-500" />

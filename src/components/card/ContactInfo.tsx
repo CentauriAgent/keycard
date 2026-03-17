@@ -60,8 +60,8 @@ export function ContactInfo({ data }: ContactInfoProps) {
 
   return (
     <div className="px-4 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="rounded-xl border border-slate-200 dark:border-[#2D2D44] p-4">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+      <div className="rounded-xl border border-border bg-card p-4">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           Contact Info
         </h3>
 

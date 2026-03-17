@@ -2,13 +2,16 @@ import { useFormContext } from 'react-hook-form';
 import { Send, Loader2, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePublishCard } from '@/hooks/usePublishCard';
+import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { useToast } from '@/hooks/useToast';
+import { ACTIVE_THEME_KIND, buildActiveThemeTags, themePresets } from '@/lib/dittoTheme';
 import type { KeyCardConfig } from '@/lib/cardTypes';
 import type { EditorFormValues } from './EditorForm';
 
 export function SaveButton() {
   const { formState: { isDirty }, getValues } = useFormContext<EditorFormValues>();
   const publishCard = usePublishCard();
+  const nostrPublish = useNostrPublish();
   const { toast } = useToast();
 
   const handlePublish = async () => {
@@ -18,6 +21,7 @@ export function SaveButton() {
       v: 1,
       title: values.title || undefined,
       company: values.company || undefined,
+      email: values.email || undefined,
       phone: values.phone?.filter((p) => p.number.trim()) || undefined,
       address: values.address?.street || values.address?.city
         ? values.address
@@ -35,10 +39,37 @@ export function SaveButton() {
     };
 
     try {
+      // Publish kind:30078 card config
       await publishCard.mutateAsync({ config });
+
+      // If a Ditto theme is selected, also publish kind 16767
+      const dittoColors = values.theme?.dittoColors;
+      const dittoPresetKey = values.theme?.dittoPresetKey;
+
+      if (dittoColors && dittoPresetKey) {
+        const preset = themePresets[dittoPresetKey];
+        const tags = buildActiveThemeTags({
+          title: values.theme?.dittoTitle || preset?.label,
+          colors: dittoColors,
+          font: values.theme?.dittoFont ? { family: values.theme.dittoFont } : preset?.font,
+          background: values.theme?.dittoBackground
+            ? { url: values.theme.dittoBackground, mode: 'cover' }
+            : preset?.background,
+        });
+
+        await nostrPublish.mutateAsync({
+          kind: ACTIVE_THEME_KIND,
+          content: '',
+          tags,
+          created_at: Math.floor(Date.now() / 1000),
+        });
+      }
+
       toast({
         title: 'Card published! 🎉',
-        description: 'Your card is now live on Nostr relays.',
+        description: dittoColors
+          ? 'Your card and Ditto theme are now live on Nostr relays.'
+          : 'Your card is now live on Nostr relays.',
       });
       // Clear localStorage draft
       localStorage.removeItem('keycard-editor-draft');
@@ -52,7 +83,7 @@ export function SaveButton() {
   };
 
   const isSuccess = publishCard.isSuccess;
-  const isPending = publishCard.isPending;
+  const isPending = publishCard.isPending || nostrPublish.isPending;
 
   return (
     <Button

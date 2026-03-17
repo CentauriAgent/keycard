@@ -17,6 +17,7 @@ import { PLATFORM_URLS } from '@/lib/cardTypes';
 
 interface SocialLinksProps {
   data: CardData;
+  accentColor?: string;
 }
 
 const iconComponents: Record<string, React.ElementType> = {
@@ -43,7 +44,7 @@ function getPlatformUrl(identity: ExternalIdentity): string {
   return urlFn ? urlFn(identity.identity) : '';
 }
 
-export function SocialLinks({ data }: SocialLinksProps) {
+export function SocialLinks({ data, accentColor: _accentColor }: SocialLinksProps) {
   const identities = data.identities ?? [];
   const configLinks = data.config?.links ?? [];
 
@@ -115,8 +116,8 @@ export function SocialLinks({ data }: SocialLinksProps) {
 
   return (
     <div className="px-4 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="rounded-xl border border-slate-200 dark:border-[#2D2D44] p-4">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+      <div className="rounded-xl border border-border bg-card p-4">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           Social & Links
         </h3>
 
@@ -128,9 +129,9 @@ export function SocialLinks({ data }: SocialLinksProps) {
                 href={row.url || undefined}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 py-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 px-4 transition-colors"
+                className="flex items-center gap-3 py-3 cursor-pointer hover:bg-muted px-4 transition-colors"
               >
-                <row.icon className="w-5 h-5 text-slate-500 dark:text-slate-400 shrink-0" />
+                <row.icon className="w-5 h-5 text-muted-foreground shrink-0" />
                 <span className="text-sm font-medium flex-1">{row.label}</span>
                 {row.verified && (
                   <BadgeCheck className="w-4 h-4 text-green-500 shrink-0" />

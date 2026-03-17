@@ -14,23 +14,17 @@ export function AboutSection({ data }: AboutSectionProps) {
 
   return (
     <div className="px-4 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="rounded-xl border border-slate-200 dark:border-[#2D2D44] p-4">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+      <div className="rounded-xl border border-border bg-card p-4">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           About
         </h3>
-
-        <p
-          className={`text-sm leading-relaxed text-slate-700 dark:text-slate-300 ${
-            isLong && !expanded ? 'line-clamp-6' : ''
-          }`}
-        >
+        <p className={`text-sm leading-relaxed text-card-foreground whitespace-pre-wrap ${isLong && !expanded ? 'line-clamp-6' : ''}`}>
           {data.about}
         </p>
-
         {isLong && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="text-sm font-medium text-violet-500 hover:text-violet-600 mt-2 transition-colors"
+            className="text-sm font-medium text-primary hover:opacity-80 mt-2 transition-opacity"
           >
             {expanded ? 'Show less' : 'Read more'}
           </button>

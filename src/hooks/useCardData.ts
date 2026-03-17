@@ -242,6 +242,7 @@ export function useCardData(identifier: string | undefined) {
         nip05,
         config,
         identities,
+        profileEvent: profileEvent as import('nostr-tools').Event | undefined,
       };
     },
     staleTime: 5 * 60 * 1000,

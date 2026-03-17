@@ -3,6 +3,7 @@ import type { CardData } from '@/lib/cardTypes';
 
 interface QuickActionsProps {
   data: CardData;
+  accentColor?: string;
 }
 
 interface ActionButton {
@@ -11,7 +12,8 @@ interface ActionButton {
   href: string;
 }
 
-export function QuickActions({ data }: QuickActionsProps) {
+export function QuickActions({ data, accentColor }: QuickActionsProps) {
+  const accent = accentColor ?? data.config?.theme?.accent ?? '#8B5CF6';
   const actions: ActionButton[] = [];
 
   const firstPhone = data.config?.phone?.[0]?.number;
@@ -29,8 +31,8 @@ export function QuickActions({ data }: QuickActionsProps) {
     });
   }
 
-  // Email from NIP-05 or config
-  const email = data.nip05?.includes('@') ? data.nip05 : undefined;
+  // Email from card config (explicit email field)
+  const email = data.config?.email;
   if (email) {
     actions.push({
       icon: Mail,
@@ -50,7 +52,7 @@ export function QuickActions({ data }: QuickActionsProps) {
   if (actions.length < 2) return null;
 
   return (
-    <div className="flex gap-3 justify-center px-4 mt-4">
+    <div className="mx-4 mt-4 rounded-2xl bg-card border border-border px-4 py-3 flex gap-3 justify-center">
       {actions.map((action, i) => (
         <a
           key={action.label}
@@ -60,10 +62,10 @@ export function QuickActions({ data }: QuickActionsProps) {
           className="flex flex-col items-center gap-1.5 animate-in fade-in duration-200"
           style={{ animationDelay: `${i * 50}ms` }}
         >
-          <div className="w-12 h-12 rounded-full bg-violet-500/10 hover:bg-violet-500/20 flex items-center justify-center transition-colors">
-            <action.icon className="w-5 h-5 text-violet-500" />
+          <div className="w-12 h-12 rounded-full flex items-center justify-center transition-colors bg-muted hover:opacity-80">
+            <action.icon className="w-5 h-5" style={{ color: accent }} />
           </div>
-          <span className="text-xs text-slate-400">{action.label}</span>
+          <span className="text-xs text-muted-foreground">{action.label}</span>
         </a>
       ))}
     </div>
