@@ -3,8 +3,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button.tsx';
-import LoginDialog from './LoginDialog';
-import SignupDialog from './SignupDialog';
+import AuthModal from './AuthModal';
 import { useLoggedInAccounts } from '@/hooks/useLoggedInAccounts';
 import { AccountSwitcher } from './AccountSwitcher';
 import { cn } from '@/lib/utils';
@@ -15,27 +14,36 @@ export interface LoginAreaProps {
 
 export function LoginArea({ className }: LoginAreaProps) {
   const { currentUser } = useLoggedInAccounts();
-  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
-  const [signupDialogOpen, setSignupDialogOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authDefaultView, setAuthDefaultView] = useState<'choose' | 'create'>('choose');
 
-  const handleLogin = () => {
-    setLoginDialogOpen(false);
-    setSignupDialogOpen(false);
+  const handleClose = () => {
+    setAuthModalOpen(false);
   };
 
   return (
     <div className={cn("inline-flex items-center justify-center", className)}>
       {currentUser ? (
-        <AccountSwitcher onAddAccountClick={() => setLoginDialogOpen(true)} />
+        <AccountSwitcher onAddAccountClick={() => {
+          setAuthDefaultView('choose');
+          setAuthModalOpen(true);
+        }} />
       ) : (
         <div className="flex gap-3 justify-center">
           <Button
-            onClick={() => setLoginDialogOpen(true)}
+            onClick={() => {
+              setAuthDefaultView('choose');
+              setAuthModalOpen(true);
+            }}
             className='flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground w-full font-medium transition-all hover:bg-primary/90 animate-scale-in'
           >
             <span className='truncate'>Log in</span>
-          </Button><Button
-            onClick={() => setSignupDialogOpen(true)}
+          </Button>
+          <Button
+            onClick={() => {
+              setAuthDefaultView('create');
+              setAuthModalOpen(true);
+            }}
             variant="outline"
             className="flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all"
           >
@@ -44,15 +52,12 @@ export function LoginArea({ className }: LoginAreaProps) {
         </div>
       )}
 
-      <LoginDialog
-        isOpen={loginDialogOpen}
-        onClose={() => setLoginDialogOpen(false)}
-        onLogin={handleLogin}
-      />
-
-      <SignupDialog
-        isOpen={signupDialogOpen}
-        onClose={() => setSignupDialogOpen(false)}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={handleClose}
+        onLogin={handleClose}
+        defaultView={authDefaultView}
+        signupFirst={authDefaultView === 'create'}
       />
     </div>
   );

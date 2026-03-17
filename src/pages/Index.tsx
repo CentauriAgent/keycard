@@ -10,6 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   Zap,
   RefreshCw,
@@ -28,6 +29,8 @@ import {
   MapPin,
   ExternalLink,
 } from 'lucide-react';
+import AuthModal from '@/components/auth/AuthModal';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 /* ─── Intersection Observer hook for scroll animations ─── */
 function useInView(threshold = 0.15) {
@@ -119,12 +122,30 @@ function DemoCard() {
 
 /* ─── Main Index page ─── */
 const Index = () => {
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authView, setAuthView] = useState<'choose' | 'create'>('create');
+  const { user } = useCurrentUser();
+
   useSeoMeta({
     title: 'key.card — Your Nostr Identity Card',
     description: 'Your identity. Your keys. Your card. A free, open-source digital business card powered by Nostr.',
   });
 
   const DEREK_CARD = '/npub18ams6ewn5aj2n3wt2qawzglx9mr4nzksxhvrdc4gzrecw7n5tvjqctp424';
+
+  const handleCreateClick = () => {
+    if (user) {
+      window.location.href = '/edit';
+    } else {
+      setAuthView('create');
+      setAuthOpen(true);
+    }
+  };
+
+  const handleSignInClick = () => {
+    setAuthView('choose');
+    setAuthOpen(true);
+  };
 
   const features = [
     { icon: Zap, title: 'Lightning zaps built in', desc: 'Accept Bitcoin payments right on your card. No payment processor needed.' },
@@ -163,16 +184,12 @@ const Index = () => {
             <span>key<span className="text-violet-500">.card</span></span>
           </Link>
           <div className="flex items-center gap-3">
-            <Link to={DEREK_CARD}>
-              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white hidden sm:inline-flex">
-                Sign In
-              </Button>
-            </Link>
-            <Link to="/edit">
-              <Button size="sm" className="bg-violet-500 hover:bg-violet-600 text-white">
-                Create your card
-              </Button>
-            </Link>
+            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white hidden sm:inline-flex" onClick={handleSignInClick}>
+              Sign In
+            </Button>
+            <Button size="sm" className="bg-violet-500 hover:bg-violet-600 text-white" onClick={handleCreateClick}>
+              Create your card
+            </Button>
           </div>
         </div>
       </header>
@@ -194,11 +211,9 @@ const Index = () => {
               A free, open-source digital business card powered by your Nostr identity. No subscriptions. No vendor lock-in. Your card lives on relays — forever.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 mt-8">
-              <Link to="/edit">
-                <Button size="lg" className="w-full sm:w-auto h-12 px-8 rounded-xl bg-violet-500 hover:bg-violet-600 text-white text-base font-semibold shadow-lg shadow-violet-500/25">
-                  Create your card free
-                </Button>
-              </Link>
+              <Button size="lg" className="w-full sm:w-auto h-12 px-8 rounded-xl bg-violet-500 hover:bg-violet-600 text-white text-base font-semibold shadow-lg shadow-violet-500/25" onClick={handleCreateClick}>
+                Create your card free
+              </Button>
               <Link to={DEREK_CARD}>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto h-12 px-8 rounded-xl border-violet-500/30 text-violet-300 hover:bg-violet-500/10">
                   See a demo
@@ -325,11 +340,9 @@ const Index = () => {
             <p className="text-lg text-slate-400 mt-3 max-w-md mx-auto">
               Create your Nostr-powered business card in under 60 seconds.
             </p>
-            <Link to="/edit">
-              <Button size="lg" className="mt-8 h-14 px-10 rounded-xl bg-violet-500 hover:bg-violet-600 text-white text-lg font-semibold shadow-lg shadow-violet-500/25">
-                Create your card free →
-              </Button>
-            </Link>
+            <Button size="lg" className="mt-8 h-14 px-10 rounded-xl bg-violet-500 hover:bg-violet-600 text-white text-lg font-semibold shadow-lg shadow-violet-500/25" onClick={handleCreateClick}>
+              Create your card free →
+            </Button>
           </div>
         </FadeInSection>
       </section>
@@ -369,6 +382,18 @@ const Index = () => {
           50% { transform: translateY(-10px) rotate(-1deg); }
         }
       `}</style>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={authOpen}
+        onClose={() => setAuthOpen(false)}
+        onLogin={() => {
+          setAuthOpen(false);
+          window.location.href = '/edit';
+        }}
+        defaultView={authView}
+        signupFirst={authView === 'create'}
+      />
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { useCardData } from '@/hooks/useCardData';
 import { EditorForm, EditorFormContent } from './EditorForm';
 import { LivePreview } from './LivePreview';
 import { cn } from '@/lib/utils';
-import LoginDialog from '@/components/auth/LoginDialog';
+import AuthModal from '@/components/auth/AuthModal';
 import type { CardData } from '@/lib/cardTypes';
 
 type MobileTab = 'edit' | 'preview';
@@ -37,35 +37,38 @@ interface LoginGateProps {
 }
 
 function LoginGate({ showLogin, onOpenLogin, onCloseLogin }: LoginGateProps) {
+  const [showCreate, setShowCreate] = useState(false);
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-[#0A0A0F] flex items-center justify-center">
       <div className="max-w-sm mx-auto p-8 text-center">
         <div className="flex size-24 text-5xl bg-violet-500/10 rounded-full items-center justify-center mx-auto">
           🔑
         </div>
-        <h1 className="text-xl font-bold mt-6">Sign in to edit your card</h1>
+        <h1 className="text-xl font-bold mt-6 dark:text-white">Create your digital business card</h1>
         <p className="text-sm text-slate-400 mt-2">
-          Connect your Nostr identity to create and customize your digital business card.
+          New to Nostr? Create your identity in seconds. Already have one? Sign in below.
         </p>
         <button
-          onClick={onOpenLogin}
-          className="mt-6 w-full h-12 rounded-xl bg-violet-500 hover:bg-violet-600 text-white font-medium transition-colors"
+          onClick={() => setShowCreate(true)}
+          className="mt-6 w-full h-12 rounded-xl bg-violet-500 hover:bg-violet-600 text-white font-semibold transition-colors"
         >
-          Connect to Nostr
+          ✨ Create New Identity
         </button>
-        <p className="text-xs text-slate-400 mt-4">
-          Don&apos;t have a Nostr key?{' '}
-          <a
-            href="https://nostr.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-violet-500 hover:underline"
-          >
-            Learn more →
-          </a>
-        </p>
+        <button
+          onClick={onOpenLogin}
+          className="mt-3 w-full h-10 rounded-xl border border-slate-300 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-medium transition-colors text-sm"
+        >
+          Sign in to existing account
+        </button>
       </div>
-      <LoginDialog
+      <AuthModal
+        isOpen={showCreate}
+        onClose={() => setShowCreate(false)}
+        onLogin={() => setShowCreate(false)}
+        defaultView="create"
+        signupFirst
+      />
+      <AuthModal
         isOpen={showLogin}
         onClose={onCloseLogin}
         onLogin={onCloseLogin}
