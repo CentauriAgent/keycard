@@ -3,6 +3,7 @@ import { ScrollToTop } from "./components/ScrollToTop";
 
 import Index from "./pages/Index";
 import { CardPage } from "./components/card/CardPage";
+import { EditorPage } from "./components/editor/EditorPage";
 import NotFound from "./pages/NotFound";
 
 export function AppRouter() {
@@ -11,6 +12,8 @@ export function AppRouter() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Index />} />
+        {/* Card editor (authenticated) */}
+        <Route path="/edit" element={<EditorPage />} />
         {/* Card view: npub1…, nprofile1…, or NIP-05 (user@domain.com) */}
         <Route path="/:identifier" element={<CardPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
